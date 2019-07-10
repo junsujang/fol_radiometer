@@ -74,6 +74,12 @@ int main() {
 	pinMode(5, OUTPUT);
 
 	// TODO: Wait until ON signal has been received
+	// JUNSU: When on is received, please remember to set the time
+	// 	from the rest of the incoming string formatted "YYYY:MM:DD HH:mm:ss.sss"
+	// https://linux.die.net/man/3/clock_gettime
+	// http://linux.die.net/man/2/time
+	// There are various clocks (ref: clock_id) with various resolutions (clock_getres())
+	//  
     #pragma omp parallel num_threads (3)
     {
         #pragma omp single nowait
@@ -90,6 +96,10 @@ int main() {
 			// and count threads
 			set_tx_timer();
 			// Process incoming serial signal
+			// JUNSU: Recommend wiringPi for serial
+			// http://wiringpi.com/reference/serial-library/
+			// https://raspberrypi.stackexchange.com/questions/93336/serial-port-c-code
+			// should provide a good springboard
 			int i = 0;
 			while (i < 5) { //!terminate) {
 				sleep(1);
@@ -97,8 +107,12 @@ int main() {
 					// TODO: write data to serial
 					printf("FISH!\n");
 					tx_now = 0;
+				} else if (wifi) {
+					//turn on wifi
+				} else if (off) {
+					break;
 				}
-				i++;*/
+				*/
 			}
 			printf("1: terminate\n");
 			terminate_count = 1;
@@ -171,6 +185,9 @@ struct tilt_def *get_tilt() {
 	// Read with I2C from the sensor
 	// either construct a struct or three global variables of 
 	// heading, pitch and roll
+	// JUNSU: I recommend wiringPi for I2C
+	// http://wiringpi.com/reference/i2c-library/
+	//
 	return NULL;
 }
 
@@ -192,7 +209,6 @@ void log_data() {
 		// struct tilt_def *tilt = get_tilt();
 		// JUNSU END
 		uint16_t *temp_end = (uint16_t*)((uint8_t *)r_buf + (((uint32_t)r_start - (uint32_t)r_buf + (1<<12)) % BUF_SIZE));
-		// TODO: Take measurement of headings
 
 		if (temp_end > r_start) {
 			uint32_t size = (uint32_t)(temp_end-r_start);
@@ -217,7 +233,6 @@ void log_data() {
 void tx_serial(int signo) {
 	switch(signo) {
 		case SIGUSR2:
-			//TODO: Serial write
 			tx_now = 1;
 			break;
 		default:
