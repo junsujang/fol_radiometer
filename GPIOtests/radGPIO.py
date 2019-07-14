@@ -20,15 +20,16 @@ def initCounterGPIO(pi):
         pi.set_mode(pin, pigpio.OUTPUT)
 
     pi.write(PIN_nOUTEN,0)
-    pi.write(PIN_LATCHEN,0)
+    pi.write(PIN_LATCHEN,1)
 
 def countPhotons(pi):
     print("Counting Photons")    
-    pi.write(PIN_LATCHEN,1)
+    pi.write(PIN_LATCHEN,0)
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
     rawdat = pi.read_bank_1()
-    pi.write(PIN_LATCHEN,0)
+    print(str(rawdat))
+    pi.write(PIN_LATCHEN,1)
     return orderbits(np.uint32(rawdat))
 
 def orderbits(datin):
