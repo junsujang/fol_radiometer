@@ -28,6 +28,7 @@ def countPhotons(pi):
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
     rawdat = pi.read_bank_1()
+    pi.write(PIN_LATCHEN,0)
     return orderbits(np.uint32(rawdat))
 
 def orderbits(datin):
