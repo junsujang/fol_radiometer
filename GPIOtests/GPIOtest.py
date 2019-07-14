@@ -15,7 +15,7 @@ import time
 import radGPIO
 
 pig = pigpio.pi()
-radGPIO.initCounterGPIO(pig)
+starttime = radGPIO.initCounterGPIO(pig)
 if len(sys.argv) == 1:
     nloops = 2
 else:
@@ -24,9 +24,14 @@ else:
 #print('Hello World')
 #print(str(nloops))
     
+totphotons = 0    
 for i in range(nloops):
     numphotons = radGPIO.countPhotons(pig)
     print(str(numphotons))
-    time.sleep(1)
+    #time.sleep(1)
+    totphotons = totphons + numphotons
 
 
+endtime = time.clock()
+elapsed = endtime-starttime
+print('Elapsed time: {0}\n, total photons: {1}'.format(str(elapsed),str(totphotons))

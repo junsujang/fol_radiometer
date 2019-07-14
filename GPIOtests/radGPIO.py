@@ -4,6 +4,7 @@ sys.path.append("../pigpio")
 
 import pigpio
 import numpy as np
+import time
 
 PIN_nOUTEN = 21
 PIN_LATCHEN = 20
@@ -22,6 +23,8 @@ def initCounterGPIO(pi):
     pi.write(PIN_nOUTEN,0)
     pi.write(PIN_LATCHEN,1)
     pi.write(PIN_COUNTCLEAR,1)
+    pi.write(PIN_COUNTCLEAR,0)
+    return time.clock()
 
 def countPhotons(pi):
     print("Counting Photons")    
