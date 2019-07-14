@@ -6,6 +6,7 @@
 #'sudo pigpiod -s 1'
 import sys
 sys.path.append("../pigpio")
+sys.path.append(".")
 import numpy as np
 import pigpio
 
@@ -14,7 +15,7 @@ import time
 import radGPIO
 
 pig = pigpio.pi()
-initCounterGPIO(pig)
+radGPIO.initCounterGPIO(pig)
 if len(sys.argv) == 1:
     nloops = 2
 else:

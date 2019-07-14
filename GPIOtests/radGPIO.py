@@ -2,6 +2,7 @@
 import sys
 sys.path.append("../pigpio")
 
+import pigpio
 import numpy as np
 
 PIN_nOUTEN = 21
