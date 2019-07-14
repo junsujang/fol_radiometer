@@ -16,18 +16,19 @@ def initCounterGPIO(pi):
         pi.set_mode(pin, pigpio.INPUT)
         pi.set_pull_up_down(pin, pigpio.PUD_OFF)
         
-    for pin in [PIN_nOUTEN, PIN_LATCHEN]:
+    for pin in [PIN_nOUTEN, PIN_LATCHEN, PIN_COUNTCLEAR]:
         pi.set_mode(pin, pigpio.OUTPUT)
 
     pi.write(PIN_nOUTEN,0)
     pi.write(PIN_LATCHEN,1)
+    pi.write(PIN_COUNTCLEAR,1)
 
 def countPhotons(pi):
     print("Counting Photons")    
     pi.write(PIN_LATCHEN,0)
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
-    rawdat = pi.read_bank_1()
+    rawdat = pi.read_bank_1()#notwe full bNK READ MAY INTRODUCE LATENCY ISSUES VIZ KERNEL BITCHYNESS
     print(str(rawdat))
     pi.write(PIN_LATCHEN,1)
     return orderbits(np.uint32(rawdat))
@@ -35,6 +36,8 @@ def countPhotons(pi):
 def orderbits(datin):
     datout = np.int32(0)
     for i in range(len(PINS_LATCHDAT)):
-        bitdat = np.bitwise_and(1, np.right_shift(datin, PINS_LATCHDAT[i]))
+        bitmask = np.bitwise_and(datin,np.left_shift(1,PINS_LATCHDAT[i]))
+        bitdat = np.bitwise_and(1, np.right_shift(bitmask, PINS_LATCHDAT[i]))
         datout = datout + np.left_shift(bitdat,i)
+    return datout
         
