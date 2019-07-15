@@ -29,9 +29,9 @@ for i in range(nloops):
     numphotons = radGPIO.countPhotons(pig)
     print(str(numphotons))
     #time.sleep(1)
-    totphotons = totphons + numphotons
+    totphotons = totphotons + numphotons
 
 
 endtime = time.clock()
 elapsed = endtime-starttime
-print('Elapsed time: {0}\n, total photons: {1}'.format(str(elapsed),str(totphotons))
+print('Elapsed time: {0}\nTtotal photons: {1}\nFrequency: {2}'.format(str(elapsed),str(totphotons),str(totphotons/elapsed)))

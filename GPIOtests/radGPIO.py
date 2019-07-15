@@ -9,6 +9,7 @@ import time
 PIN_nOUTEN = 21
 PIN_LATCHEN = 20
 PIN_COUNTCLEAR = 16
+PIN_STROBE = 12
 PINS_LATCHDAT = [4, 17, 27, 22, 10, 9, 11, 5, 6, 13, 19, 26]
 
 
@@ -17,23 +18,26 @@ def initCounterGPIO(pi):
         pi.set_mode(pin, pigpio.INPUT)
         pi.set_pull_up_down(pin, pigpio.PUD_OFF)
         
-    for pin in [PIN_nOUTEN, PIN_LATCHEN, PIN_COUNTCLEAR]:
+    for pin in [PIN_nOUTEN, PIN_LATCHEN, PIN_COUNTCLEAR, PIN_STROBE]:
         pi.set_mode(pin, pigpio.OUTPUT)
 
     pi.write(PIN_nOUTEN,0)
     pi.write(PIN_LATCHEN,1)
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
+    pi.write(PIN_STROBE,0)
     return time.clock()
 
 def countPhotons(pi):
-    print("Counting Photons")    
+    print("Counting Photons")
+    pi.write(PIN_STROBE,1)    
     pi.write(PIN_LATCHEN,0)
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
     rawdat = pi.read_bank_1()#notwe full bNK READ MAY INTRODUCE LATENCY ISSUES VIZ KERNEL BITCHYNESS
     print(str(rawdat))
     pi.write(PIN_LATCHEN,1)
+    pi.write(PIN_STROBE,0)
     return orderbits(np.uint32(rawdat))
 
 def orderbits(datin):
