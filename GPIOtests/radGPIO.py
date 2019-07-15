@@ -30,14 +30,14 @@ def initCounterGPIO(pi):
 
 def countPhotons(pi):
     print("Counting Photons")
-    pi.write(PIN_STROBE,1)    
+    #pi.write(PIN_STROBE,1)    
     pi.write(PIN_LATCHEN,0)
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
     rawdat = pi.read_bank_1()#notwe full bNK READ MAY INTRODUCE LATENCY ISSUES VIZ KERNEL BITCHYNESS
     print(str(rawdat))
     pi.write(PIN_LATCHEN,1)
-    pi.write(PIN_STROBE,0)
+    #pi.write(PIN_STROBE,0)
     return orderbits(np.uint32(rawdat))
 
 def orderbits(datin):
@@ -48,3 +48,7 @@ def orderbits(datin):
         datout = datout + np.left_shift(bitdat,i)
     return datout
         
+def writencounts(pi,n):
+    for i in range(n):
+        pi.write(PIN_STROBE,1)
+        pi.write(PIN_STROBE,0)

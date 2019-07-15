@@ -23,15 +23,31 @@ else:
     
 #print('Hello World')
 #print(str(nloops))
+if 0:    
+    totphotons = 0    
+    for i in range(nloops):
+        numphotons = radGPIO.countPhotons(pig)
+        print(str(numphotons))
+        #time.sleep(1)
+        totphotons = totphotons + numphotons
     
-totphotons = 0    
-for i in range(nloops):
-    numphotons = radGPIO.countPhotons(pig)
-    print(str(numphotons))
-    #time.sleep(1)
-    totphotons = totphotons + numphotons
+    
+    endtime = time.clock()
+    elapsed = endtime-starttime
+    print('Elapsed time: {0}\nTtotal photons: {1}\nFrequency: {2}'.format(str(elapsed),str(totphotons),str(totphotons/elapsed)))
 
+if 1:
+    logrange = np.logspace(0,3.5,nloops)
+    logrange = logrange.astype(int)
+    numpassed = 0
+    print('Testing the following count numbers:')
+    print(*logrange)
+    for i in logrange:
+        radGPIO.writencounts(pig,i)
+        numcounted = radGPIO.countPhotons(pig)
+        if numcounted==i:
+            numpassed = numpassed + 1
+        else:
+            print('Wrote {0} counts, Read {1} counts'.format(i,numcounted))
 
-endtime = time.clock()
-elapsed = endtime-starttime
-print('Elapsed time: {0}\nTtotal photons: {1}\nFrequency: {2}'.format(str(elapsed),str(totphotons),str(totphotons/elapsed)))
+    print('Passed {0} out of {1} tests'.format(numpassed,nloops))
