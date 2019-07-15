@@ -10,11 +10,12 @@ PIN_nOUTEN = 21
 PIN_LATCHEN = 20
 PIN_COUNTCLEAR = 16
 PIN_STROBE = 12
+PIN_STATE = 18
 PINS_LATCHDAT = [4, 17, 27, 22, 10, 9, 11, 5, 6, 13, 19, 26]
 
 
 def initCounterGPIO(pi):
-    for pin in PINS_LATCHDAT:
+    for pin in PINS_LATCHDAT + [PIN_STATE]:
         pi.set_mode(pin, pigpio.INPUT)
         pi.set_pull_up_down(pin, pigpio.PUD_OFF)
         
@@ -35,9 +36,10 @@ def countPhotons(pi):
     pi.write(PIN_COUNTCLEAR,1)
     pi.write(PIN_COUNTCLEAR,0)
     rawdat = pi.read_bank_1()#notwe full bNK READ MAY INTRODUCE LATENCY ISSUES VIZ KERNEL BITCHYNESS
-    print(str(rawdat))
+    #print(str(rawdat))
     pi.write(PIN_LATCHEN,1)
     #pi.write(PIN_STROBE,0)
+    print('Hamamatsu state is {0}'.format(str(pi.read(PIN_STATE))))
     return orderbits(np.uint32(rawdat))
 
 def orderbits(datin):

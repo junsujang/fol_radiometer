@@ -36,7 +36,7 @@ if 0:
     elapsed = endtime-starttime
     print('Elapsed time: {0}\nTtotal photons: {1}\nFrequency: {2}'.format(str(elapsed),str(totphotons),str(totphotons/elapsed)))
 
-if 1:
+if 0:
     logrange = np.logspace(0,3.5,nloops)
     logrange = logrange.astype(int)
     numpassed = 0
@@ -51,3 +51,9 @@ if 1:
             print('Wrote {0} counts, Read {1} counts'.format(i,numcounted))
 
     print('Passed {0} out of {1} tests'.format(numpassed,nloops))
+    
+if 1:
+    while 1:
+        numphotons = radGPIO.countPhotons(pig)
+        print('Counted {0} photons'.format(numphotons))
+        
